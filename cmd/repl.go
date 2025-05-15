@@ -8,15 +8,17 @@ import (
     "os/signal"
 )
 
-
-func main() {
+func handleIntSignal() {
     var signalChan chan os.Signal = make(chan os.Signal, 1)
     signal.Notify(signalChan, os.Interrupt)
-    go func() {
-        <-signalChan
-        fmt.Println("\nleaving...")
-        os.Exit(0)
-    }()
+
+    <-signalChan
+    fmt.Println("\nleaving...")
+    os.Exit(0)
+}
+
+func main() {
+    go handleIntSignal()
 
     var reader *bufio.Reader = bufio.NewReader(os.Stdin)
     var input string = ""
